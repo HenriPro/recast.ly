@@ -1,38 +1,76 @@
 class App extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
+
 
     this.state = {
-      selected: 0
+      selected: 0,
+      videos: [],
+      searchText: 'cats'
     };
-
+    
+    this.handleSearch = this.handleSearch.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleData = this.handleData.bind(this);
+
+
+    //Make a call with options and callback
+    window.searchYouTube(this.state.searchText, this.handleData);
 
   }  
 
+  handleSearch(searchText) {
+    console.log(searchText);
+    this.setState({
+      searchText: searchText
+    });
+    window.searchYouTube(this.state.searchText, this.handleData);
+
+  }
+
   handleClick(videoIndex) {
-    console.log('In App handleClick');
-    //console.log(e.target.value);
     this.setState({
       selected: videoIndex
     });
+
   }
+
+  handleData(data) {
+    if (data) {
+      this.setState({
+        videos: data.items
+      });
+    } else {
+      console.log('no video data');
+    }
+  }
+
   
   render() {
-    console.log('In App render');
-    return (
-      <div>
-        <Nav />
-        <div className="col-md-7">
-          <VideoPlayer 
-            video={this.props.videos[this.state.selected]}
-          />
+    
+    if (this.state.videos.length > 0) {
+
+      return (
+        <div>
+          <Nav onClick={this.handleSearch} />
+          <div className="col-md-7">
+            <VideoPlayer 
+              video={this.state.videos[this.state.selected]}
+            />
+          </div>
+          <div className="col-md-5">
+            <VideoList videos={this.state.videos} onClick={this.handleClick} />
+          </div>
         </div>
-        <div className="col-md-5">
-          <VideoList videos={this.props.videos} onClick={this.handleClick} />
+      );
+    } else {
+      console.log('In empty array');
+      return (
+        <div>
+          <h3>Loading.... </h3>
         </div>
-      </div>
-    );
+      );
+    }
   }
 }
 
