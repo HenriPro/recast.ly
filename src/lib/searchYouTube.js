@@ -1,5 +1,10 @@
 var searchYouTube = (options, callback) => {
-  // TODO
+  $.ajax({
+    url:
+    data: 
+    success:
+
+  }); 
 };
 
 window.searchYouTube = searchYouTube;
